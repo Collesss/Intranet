@@ -1,3 +1,8 @@
+using Intranet.AutoMapperProfiles;
+using Intranet.Repository.ActiveDirectory.AutoMapperProfiles;
+using Intranet.Repository.ActiveDirectory.Implementaions;
+using Intranet.Repository.ActiveDirectory.Options;
+using Intranet.Repository.Interfaces;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 
 namespace Intranet
@@ -20,6 +25,15 @@ namespace Intranet
                 options.FallbackPolicy = options.DefaultPolicy;
             });
             builder.Services.AddRazorPages();
+
+            builder.Services.Configure<ActiveDirectoryOption>(builder.Configuration.GetSection("ActiveDirectoryOption"));
+
+            builder.Services.AddAutoMapper(cfg => { 
+                cfg.AddProfile<ActiveDirectoryAutoMapperProfile>();
+                cfg.AddProfile<IntranetAutoMapperProfile>();
+            });
+
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             var app = builder.Build();
 

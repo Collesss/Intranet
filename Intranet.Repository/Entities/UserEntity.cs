@@ -8,6 +8,6 @@
 
         public string Email { get; set; }
 
-        public string WorkPhone { get; set; }
+        public PhoneUserEntity[] Phones { get; set; }
     }
 }

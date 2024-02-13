@@ -6,6 +6,6 @@
 
         public string Email { get; set; }
 
-        public string WorkPhone { get; set; }
+        public PhoneUserViewModel[] Phones { get; set; }
     }
 }
