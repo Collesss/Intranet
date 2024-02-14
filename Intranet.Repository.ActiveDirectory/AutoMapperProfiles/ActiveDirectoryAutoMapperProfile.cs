@@ -14,7 +14,8 @@ namespace Intranet.Repository.ActiveDirectory.AutoMapperProfiles
                 .ForMember(user => user.DisplayName, cfg => cfg.MapFrom(sr => sr.GetStrFirstProp("displayName")))
                 .ForMember(user => user.Email, cfg => cfg.MapFrom(sr => sr.GetStrFirstProp("mail")))
                 .ForMember(user => user.UserPrincipalName, cfg => cfg.MapFrom(sr => sr.GetStrFirstProp("userprincipalname")))
-                .ForMember(user => user.Phones, cfg => cfg.MapFrom(sr => GetPhones(sr)));
+                .ForMember(user => user.Phones, cfg => cfg.MapFrom(sr => GetPhones(sr)))
+                .ForMember(user => user.PhonesNumer, cfg => cfg.MapFrom(sr => GetPhonesDict(sr)));
         }
 
         private PhoneUserEntity[] GetPhones(SearchResult searchResult)
@@ -23,13 +24,27 @@ namespace Intranet.Repository.ActiveDirectory.AutoMapperProfiles
             {
                 "telephonenumber",
                 "othertelephone",
-                "ipphone"
+                "ipphone",
+                "otheripphone"
             };
 
             return typePhones
-                .SelectMany(typePhone => searchResult.GetArrStrProp(typePhone)
-                .Select(phone => new PhoneUserEntity { Type = typePhone, PhoneNumber = phone}))
+                .Select(typePhone => new PhoneUserEntity { Type = typePhone, PhoneNumbers = searchResult.GetArrStrProp(typePhone) })
                 .ToArray();
+        }
+
+        private Dictionary<string, string[]> GetPhonesDict(SearchResult searchResult)
+        {
+            string[] typePhones = new string[]
+            {
+                "telephonenumber",
+                "othertelephone",
+                "ipphone",
+                "otheripphone"
+            };
+
+            return new Dictionary<string, string[]>(typePhones
+                .Select(typePhone => KeyValuePair.Create(typePhone, searchResult.GetArrStrProp(typePhone))));
         }
     }
 }

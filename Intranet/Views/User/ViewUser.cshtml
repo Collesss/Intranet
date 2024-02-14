@@ -3,6 +3,7 @@
 <p>
     @Html.DisplayForModel()
 </p>
+<!--
 <p>
     <table>
         <thead>
@@ -18,15 +19,58 @@
         <tbody>
             @foreach(var phoneWithType in Model.Phones)
             {
-                <tr>
-                    <td>
-                        @phoneWithType.Type
-                    </td>
-                    <td>
-                        @phoneWithType.PhoneNumber
-                    </td>
-                </tr>
+                @if(phoneWithType.PhoneNumbers.Length <= 1)
+                {
+                    <tr>
+                        <td>
+                            @phoneWithType.Type
+                        </td>
+                        <td>
+                            @phoneWithType.PhoneNumbers.FirstOrDefault(string.Empty)
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td>
+                            @phoneWithType.Type
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    @foreach(var phone in phoneWithType.PhoneNumbers)
+                    {
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                @phone
+                            </td>
+                        </tr>
+                    }
+                }
             }
         </tbody>
     </table>
+</p>
+-->
+<p>
+    Номера телефонов
+    <ul>
+            @foreach (var NumbersWithTypePhone in Model.Phones)
+            {
+            <li>
+                @NumbersWithTypePhone.Type
+                <ul>
+                        @foreach (var phone in NumbersWithTypePhone.PhoneNumbers)
+                        {
+                        <li>
+                                @phone
+                        </li>
+                        }
+                </ul>
+            </li>
+            }
+    </ul>
 </p>
