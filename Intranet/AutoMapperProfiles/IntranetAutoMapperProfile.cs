@@ -9,8 +9,7 @@ namespace Intranet.AutoMapperProfiles
         public IntranetAutoMapperProfile()
         {
             CreateMap<UserEntity, UserViewModel>()
-                .ForMember(uvm => uvm.Name, cfg => cfg.MapFrom(ue => ue.DisplayName))
-                .ForMember(uvm => uvm.PhonesNumer, cfg => cfg.MapFrom(ue => TransfromTypePhoneNumber(ue.PhonesNumer)));
+                .ForMember(uvm => uvm.Name, cfg => cfg.MapFrom(ue => ue.DisplayName));
 
             CreateMap<PhoneUserEntity, PhoneUserViewModel>()
                 .ForMember(puvm => puvm.Type, cfg => cfg.AddTransform(type => TransformTypePhone(type)));
@@ -27,22 +26,6 @@ namespace Intranet.AutoMapperProfiles
             };
 
             return transformDict.TryGetValue(typePhone, out string transformedType) ? transformedType : typePhone;
-        }
-
-        private Dictionary<string, string[]> TransfromTypePhoneNumber(Dictionary<string, string[]> transfromPhone)
-        {
-            Dictionary<string, string> transformDict = new Dictionary<string, string>()
-            {
-                ["telephonenumber"] = "Основной номер",
-                ["othertelephone"] = "Дополнительные номера",
-                ["ipphone"] = "Ip телефон",
-                ["otheripphone"] = "Дополнительные Ip телефоны"
-            };
-
-            string Transform(string typePhone) =>
-                transformDict.TryGetValue(typePhone, out string transformedType) ? transformedType : typePhone;
-
-            return new Dictionary<string, string[]>(transfromPhone.Select(kvp => KeyValuePair.Create(Transform(kvp.Key), kvp.Value)));
         }
     }
 }

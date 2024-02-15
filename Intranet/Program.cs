@@ -54,7 +54,7 @@ namespace Intranet
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=User}/{action=ViewUser}/{id?}");
 
             app.Run();
         }

@@ -25,9 +25,15 @@ namespace Intranet.Repository.ActiveDirectory.Implementaions
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<UserEntity>> GetAll(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<UserEntity>> GetAll(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            DirectorySearcher searcher = new DirectorySearcher(_directoryEntry, $"(&(objectClass=user)(objectCategory=person))");
+
+            searcher.SizeLimit = 100;
+
+            IEnumerable<SearchResult> searchResultCollection = searcher.FindAll().Cast<SearchResult>();
+
+            return await Task.FromResult(_mapper.Map<IEnumerable<SearchResult>, IEnumerable<UserEntity>>(searchResultCollection));
         }
 
         public async Task<UserEntity> GetById(string id, CancellationToken cancellationToken = default)

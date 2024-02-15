@@ -17,18 +17,24 @@ namespace Intranet.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<IActionResult> ViewUser()
+        public async Task<IActionResult> ViewUser(string id)
         {
-            UserEntity userEntity = await _userRepository.GetById(User.FindFirst("http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid").Value);
+            id = string.IsNullOrEmpty(id) ? User.FindFirst("http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid").Value : id;
+
+            UserEntity userEntity = await _userRepository.GetById(id);
 
             UserViewModel userViewModel = _mapper.Map<UserEntity, UserViewModel>(userEntity);
 
             return View(userViewModel); 
         }
 
-        public IActionResult ViewUsers()
+        public async Task<IActionResult> ViewUsers()
         {
-            return View();
+            IEnumerable<UserEntity> usersEntity = await _userRepository.GetAll();
+
+            IEnumerable<UserViewModel> usersViewModel = _mapper.Map<IEnumerable<UserEntity>, IEnumerable<UserViewModel>>(usersEntity);
+
+            return View(usersViewModel);
         }
     }
 }
