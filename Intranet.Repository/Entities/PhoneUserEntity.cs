@@ -1,9 +1,7 @@
 ﻿namespace Intranet.Repository.Entities
 {
-    public class PhoneUserEntity
+    public class PhoneUserEntity : BaseEntity<int>
     {
-        public int Id { get; set; }
-
         public int UserId { get; set; }
 
         public UserEntity User { get; set; }

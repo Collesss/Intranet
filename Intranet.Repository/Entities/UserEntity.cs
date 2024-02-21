@@ -11,7 +11,5 @@
         public string Email { get; set; }
 
         public PhoneUserEntity[] Phones { get; set; }
-
-        public Dictionary<string, string[]> PhonesNumer {  get; set; }
     }
 }
