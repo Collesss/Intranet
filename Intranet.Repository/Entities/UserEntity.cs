@@ -1,7 +1,9 @@
 ﻿namespace Intranet.Repository.Entities
 {
-    public class UserEntity : BaseEntity<string>
+    public class UserEntity : BaseEntity<int>
     {
+        public string SID { get; set; }
+
         public string UserPrincipalName { get; set; }
 
         public string DisplayName { get; set; }
