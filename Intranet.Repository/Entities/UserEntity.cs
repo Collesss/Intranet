@@ -10,6 +10,6 @@
 
         public string Email { get; set; }
 
-        public PhoneUserEntity[] Phones { get; set; }
+        public PhoneEntity[] Phones { get; set; }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Intranet.Models;
+using Intranet.Models.PageItems;
+using Intranet.Models.PageItems.Dto;
 using Intranet.Repository.Entities;
 
 namespace Intranet.AutoMapperProfiles
@@ -8,14 +10,23 @@ namespace Intranet.AutoMapperProfiles
     {
         public IntranetAutoMapperProfile()
         {
-            CreateMap<UserEntity, UserViewModel>()
-                .ForMember(uvm => uvm.Name, cfg => cfg.MapFrom(ue => ue.DisplayName));
+            CreateMap<ItemsDto, Query>();
 
-            CreateMap<PhoneUserEntity, PhoneUserViewModel>()
-                .ForMember(puvm => puvm.Type, cfg => cfg.AddTransform(type => TransformTypePhone(type)));
+            CreateMap<PageResult<UserEntity>, PageItemsViewModel<UserViewModel>>();
+
+            CreateMap<UserEntity, UserViewModel>()
+                .ForMember(uvm => uvm.Name, cfg => cfg.MapFrom(ue => ue.DisplayName))
+                .ForMember(uvm => uvm.Phones, cfg => cfg.MapFrom(ue => ue.Phones
+                    .GroupBy(phone => phone.Type, phone => phone.PhoneNumbers, (type, numbers) => new PhoneUserViewModel() { Type = TransTypePhone(type), PhoneNumbers = numbers.ToArray() })));
+
+
+            /*
+            CreateMap<PhoneEntity, PhoneUserViewModel>()
+                .ForMember(puvm => puvm.Type, cfg => cfg.AddTransform(type => TransTypePhone(type)));
+            */
         }
 
-        private string TransformTypePhone(string typePhone)
+        private string TransTypePhone(string typePhone)
         {
             Dictionary<string, string> transformDict = new Dictionary<string, string>()
             {

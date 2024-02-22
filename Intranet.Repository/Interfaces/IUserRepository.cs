@@ -4,7 +4,7 @@ namespace Intranet.Repository.Interfaces
 {
     public interface IUserRepository : IRepository<UserEntity, int>
     {
-        Task<PageResult<UserEntity>> GetPage(Page page, IEnumerable<Sort> sorts, IEnumerable<Filter> filters, CancellationToken cancellationToken = default);
+        Task<PageResult<UserEntity>> GetPage(Query query, CancellationToken cancellationToken = default);
 
         Task<UserEntity> GetBySid(string sid, CancellationToken cancellationToken = default);
 

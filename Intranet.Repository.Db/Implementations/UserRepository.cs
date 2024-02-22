@@ -1,6 +1,8 @@
-﻿using Intranet.Repository.Entities;
+﻿using Intranet.Repository.Db.Extensions;
+using Intranet.Repository.Entities;
 using Intranet.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Text.RegularExpressions;
 
 namespace Intranet.Repository.Db.Implementations
@@ -17,30 +19,50 @@ namespace Intranet.Repository.Db.Implementations
         public async Task<IEnumerable<UserEntity>> GetAll(CancellationToken cancellationToken = default) =>
             await _dbContext.Users.ToListAsync(cancellationToken);
             
-
         public async Task<UserEntity> GetById(int id, CancellationToken cancellationToken = default) =>
             await _dbContext.Users.FindAsync(new object[] { id }, cancellationToken);
 
         public async Task<UserEntity> GetByPrincipalName(string principalName, CancellationToken cancellationToken = default) =>
             await _dbContext.Users.FirstOrDefaultAsync(user => user.UserPrincipalName == principalName, cancellationToken);
 
-
         public async Task<UserEntity> GetBySid(string sid, CancellationToken cancellationToken = default) =>
             await _dbContext.Users.FirstOrDefaultAsync(user => user.SID == sid, cancellationToken);
 
-        public Task<PageResult<UserEntity>> GetPage(Page page, IEnumerable<Sort> sorts, IEnumerable<Filter> filters, CancellationToken cancellationToken = default)
+        public async Task<PageResult<UserEntity>> GetPage(Query query, CancellationToken cancellationToken = default)
         {
-            CheckPage(page);
-            CheckSorts(sorts);
-            CheckFilters(filters);
+            ArgumentNullException.ThrowIfNull(nameof(query));
 
-            filters = filters.Select(filter => new Filter() { Field = filter.Field, StringSearch = Regex.Replace(filter.StringSearch, "\\*", ".*") });
+            CheckPage(query.Page);
+            CheckSorts(query.Sorts);
+            CheckFilters(query.Filters);
 
+            query.Filters = query.Filters.Select(filter => new Filter() { Field = filter.Field, StringSearch = $".+{Regex.Replace(filter.StringSearch, "\\*", ".*")}.+" });
 
+            IQueryable<UserEntity> collection = _dbContext.Users.AsQueryable();
 
+            collection = query.Sorts.Aggregate(collection, (coll, sort) => coll.OrderBy(sort.Field, sort.Asc));
+            collection = collection.WhereRegexAnd(query.Filters.Select(filter => (filter.Field, filter.StringSearch)));
 
+            int Count = 0;
+            IEnumerable<UserEntity> users = null;
+            int pageNum = 0;
 
-            throw new NotImplementedException();
+            using (var transaction = await _dbContext.Database.BeginTransactionAsync(IsolationLevel.Snapshot, cancellationToken))
+            {
+                Count = await collection.CountAsync(cancellationToken);
+
+                int maxPage = (Count / query.Page.PageSize) + ((Count % query.Page.PageSize) > 0 ? 1 : 0);
+
+                pageNum = query.Page.PageNumber <= maxPage ? query.Page.PageNumber : maxPage;
+
+                users = collection
+                    .Include(user => user.Phones)
+                    .Skip((pageNum - 1) * query.Page.PageSize)
+                    .Take(query.Page.PageSize)
+                    .AsEnumerable();
+            }
+
+            return new PageResult<UserEntity>() { Items = users, PageNumber = pageNum, TotalCount = Count };
         }
 
 

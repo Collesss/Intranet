@@ -14,6 +14,6 @@ namespace Intranet.Models
         [Display(Name = "Почта")]
         public string Email { get; set; } = string.Empty;
         
-        public PhoneUserViewModel[] Phones { get; set; } = new PhoneUserViewModel[0];
+        public PhoneUserViewModel[] Phones { get; set; } = Array.Empty<PhoneUserViewModel>();
     }
 }

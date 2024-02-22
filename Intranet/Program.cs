@@ -1,9 +1,9 @@
 using Intranet.AutoMapperProfiles;
-using Intranet.Repository.ActiveDirectory.AutoMapperProfiles;
-using Intranet.Repository.ActiveDirectory.Implementaions;
-using Intranet.Repository.ActiveDirectory.Options;
+using Intranet.Repository.Db;
+using Intranet.Repository.Db.Implementations;
 using Intranet.Repository.Interfaces;
 using Microsoft.AspNetCore.Authentication.Negotiate;
+using Microsoft.EntityFrameworkCore;
 
 namespace Intranet
 {
@@ -26,10 +26,10 @@ namespace Intranet
             });
             builder.Services.AddRazorPages();
 
-            builder.Services.Configure<ActiveDirectoryOption>(builder.Configuration.GetSection("ActiveDirectoryOption"));
+            builder.Services.AddDbContext<RepositoryDbContext>(opts =>
+                opts.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
             builder.Services.AddAutoMapper(cfg => { 
-                cfg.AddProfile<ActiveDirectoryAutoMapperProfile>();
                 cfg.AddProfile<IntranetAutoMapperProfile>();
             });
 

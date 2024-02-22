@@ -2,7 +2,7 @@
 {
     public class PageResult<T>
     {
-        public IEnumerable<T> Items { get; set; }
+        public IEnumerable<T> Items { get; set; } = new List<T>();
 
         public int PageNumber { get; set; }
 
