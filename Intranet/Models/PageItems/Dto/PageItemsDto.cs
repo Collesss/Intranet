@@ -8,6 +8,6 @@ namespace Intranet.Models.PageItems.Dto
         public int PageSize { get; set; } = 50;
 
         [Range(1, int.MaxValue)]
-        public int PageNumber { get; set; }
+        public int PageNumber { get; set; } = 1;
     }
 }

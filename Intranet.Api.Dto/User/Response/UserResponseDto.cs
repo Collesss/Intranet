@@ -1,7 +1,9 @@
-﻿namespace Intranet.Repository.Entities
+﻿namespace Intranet.Api.Dto.User.Response
 {
-    public class UserEntity : BaseEntity<int>
+    public class UserResponseDto
     {
+        public int Id { get; set; }
+
         public string SID { get; set; }
 
         public string UserPrincipalName { get; set; }
@@ -10,6 +12,6 @@
 
         public string Email { get; set; }
 
-        public IEnumerable<PhoneEntity> Phones { get; set; }
+        //public IEnumerable<> Phones { get; set; }
     }
 }

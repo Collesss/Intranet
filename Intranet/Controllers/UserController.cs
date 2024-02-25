@@ -5,6 +5,8 @@ using Intranet.Models.PageItems.Dto;
 using Intranet.Repository.Entities;
 using Intranet.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using System.Security.Principal;
 using Query = Intranet.Repository.Entities.Query;
 
 namespace Intranet.Controllers

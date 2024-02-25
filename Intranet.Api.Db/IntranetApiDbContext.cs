@@ -1,17 +1,17 @@
-﻿using Intranet.Repository.Db.ConfigurationsModels;
-using Intranet.Repository.Entities;
+﻿using Intranet.Api.Db.ConfigurationsModels;
+using Intranet.Api.Db.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Principal;
 
-namespace Intranet.Repository.Db
+namespace Intranet.Api.Db
 {
-    public class RepositoryDbContext : DbContext
+    public class IntranetApiDbContext : DbContext
     {
         public DbSet<UserEntity> Users { get; set; }
 
         public DbSet<PhoneEntity> Phones { get; set; }
 
-        public RepositoryDbContext(DbContextOptions<RepositoryDbContext> dbContextOptions) : base(dbContextOptions)
+        public IntranetApiDbContext(DbContextOptions<IntranetApiDbContext> dbContextOptions) : base(dbContextOptions)
         {
             Database.EnsureCreated();
         }
@@ -59,25 +59,25 @@ namespace Intranet.Repository.Db
 
             Random random = new Random();
 
-            
+
             modelBuilder.Entity<UserEntity>().HasData(Enumerable.Range(1, 100)
                 .Select(i =>
                 {
                     byte[] sidBytes = new byte[SecurityIdentifier.MaxBinaryLength - 2];
 
                     random.NextBytes(sidBytes);
-                    
+
                     sidBytes = sidBytes.Prepend((byte)5).Prepend((byte)1).ToArray();
 
                     return new UserEntity() { Id = i, SID = new SecurityIdentifier(sidBytes, 0).ToString(), DisplayName = $"Test{i} Test{1}", Email = $"test{i}@test.ru", UserPrincipalName = $"Test{i}" };
                 }));
 
-            
+
             modelBuilder.Entity<PhoneEntity>().HasData(
                 Enumerable.Range(1, 100).SelectMany(i => new PhoneEntity[] {
                     new PhoneEntity() { Id = i*2-1, Type = "telephonenumber", PhoneNumbers = $"{i:D4}", UserId = i },
                     new PhoneEntity() { Id = i*2, Type = "ipphone", PhoneNumbers = $"{i:D4}", UserId = i } }));
-            
+
         }
     }
 }

@@ -11,8 +11,13 @@ namespace Intranet.AutoMapperProfiles
         public IntranetAutoMapperProfile()
         {
             CreateMap<ItemsDto, Query>();
+            CreateMap<PageItemsDto, Page>();
+            CreateMap<SortItemsDto, Sort>();
+            CreateMap<FilterItemsDto, Filter>();
+
 
             CreateMap<PageResult<UserEntity>, PageItemsViewModel<UserViewModel>>();
+
 
             CreateMap<UserEntity, UserViewModel>()
                 .ForMember(uvm => uvm.Name, cfg => cfg.MapFrom(ue => ue.DisplayName))

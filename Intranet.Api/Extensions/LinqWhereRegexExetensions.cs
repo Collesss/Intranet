@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace Intranet.Repository.Db.Extensions
+namespace Intranet.Api.Extensions
 {
     public static class LinqWhereRegexExetensions
     {
@@ -128,7 +128,7 @@ namespace Intranet.Repository.Db.Extensions
 
             Type typeEntity = typeof(T);
 
-            foreach (var regexPredicate in regexPredicates) 
+            foreach (var regexPredicate in regexPredicates)
             {
                 if (!GetFields<T>().Contains(regexPredicate.property))
                     throw new ArgumentException($"Property with name: {regexPredicate}, not exit in type: {typeEntity.Name}", nameof(regexPredicate));
@@ -161,26 +161,26 @@ namespace Intranet.Repository.Db.Extensions
         }
 
 
-            /*
-            public static IQueryable<T> Where<T>(this IQueryable<T> collection, string predicate)
-            {
-                ArgumentNullException.ThrowIfNull(collection, nameof(collection));
-                ArgumentException.ThrowIfNullOrEmpty(predicate, nameof(predicate));
+        /*
+        public static IQueryable<T> Where<T>(this IQueryable<T> collection, string predicate)
+        {
+            ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+            ArgumentException.ThrowIfNullOrEmpty(predicate, nameof(predicate));
 
-                Expression<Func<T, bool>> expressionPredicate = GetPredicate<T>(predicate);
+            Expression<Func<T, bool>> expressionPredicate = GetPredicate<T>(predicate);
 
-                return collection.Where(expressionPredicate);
-            }
-
-
-            private static Expression<Func<T, bool>> GetPredicate<T>(string predicate)
-            {
-                ParameterExpression parameter = Expression.Parameter(typeof(T));
-
-
-
-                return null;
-            }
-            */
+            return collection.Where(expressionPredicate);
         }
+
+
+        private static Expression<Func<T, bool>> GetPredicate<T>(string predicate)
+        {
+            ParameterExpression parameter = Expression.Parameter(typeof(T));
+
+
+
+            return null;
+        }
+        */
+    }
 }

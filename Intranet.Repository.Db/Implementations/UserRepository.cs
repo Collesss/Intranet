@@ -41,13 +41,15 @@ namespace Intranet.Repository.Db.Implementations
             IQueryable<UserEntity> collection = _dbContext.Users.AsQueryable();
 
             collection = query.Sorts.Aggregate(collection, (coll, sort) => coll.OrderBy(sort.Field, sort.Asc));
-            collection = collection.WhereRegexAnd(query.Filters.Select(filter => (filter.Field, filter.StringSearch)));
+
+            if(query.Filters.Any())
+                collection = collection.WhereRegexAnd(query.Filters.Select(filter => (filter.Field, filter.StringSearch)));
 
             int Count = 0;
             IEnumerable<UserEntity> users = null;
             int pageNum = 0;
 
-            using (var transaction = await _dbContext.Database.BeginTransactionAsync(IsolationLevel.Snapshot, cancellationToken))
+            using (var transaction = await _dbContext.Database.BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken))
             {
                 Count = await collection.CountAsync(cancellationToken);
 

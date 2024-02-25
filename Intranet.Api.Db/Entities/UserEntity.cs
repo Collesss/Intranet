@@ -1,4 +1,4 @@
-﻿namespace Intranet.Repository.Entities
+﻿namespace Intranet.Api.Db.Entities
 {
     public class UserEntity : BaseEntity<int>
     {
@@ -10,6 +10,6 @@
 
         public string Email { get; set; }
 
-        public IEnumerable<PhoneEntity> Phones { get; set; }
+        public IEnumerable<PhoneEntity> Phones { get; set; } = new List<PhoneEntity>();
     }
 }

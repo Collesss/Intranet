@@ -2,7 +2,7 @@
 {
     public class ItemsDto
     {
-        public PageItemsDto Page { get; set; }
+        public PageItemsDto Page { get; set; } = new PageItemsDto();
 
         public IEnumerable<SortItemsDto> Sorts { get; set; } = Enumerable.Empty<SortItemsDto>();
 
