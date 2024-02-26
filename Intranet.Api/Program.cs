@@ -18,6 +18,14 @@ namespace Intranet.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddProblemDetails(/*cfg => 
+            {
+                cfg.CustomizeProblemDetails = ctx => 
+                {
+                    ctx.ProblemDetails
+                };
+            }*/);
+
             /*
             builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
                 .AddNegotiate();
@@ -44,6 +52,8 @@ namespace Intranet.Api
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseExceptionHandler();
 
             app.UseHttpsRedirection();
 
